@@ -44,5 +44,9 @@ Thumbs.db
 *.sln.ide
 testresults/
 
+# Environment Variables
+.env
+.env.local
+
 #Program generated files
-headers.json
+categorized_headers.json
