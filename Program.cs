@@ -3,6 +3,7 @@ using System.Text.Json;
 using HtmlAgilityPack;
 using OpenAI.Chat;
 using DotNetEnv;
+using Webscaper.OpenAI;
 
 class Program
 {
@@ -14,7 +15,7 @@ class Program
         // Doesnt work without API key, so better inform user.
         if (string.IsNullOrEmpty(apiKey))
         {
-            Console.WriteLine("API key not found in environment variables.");
+            Console.WriteLine("OPENAI_API_KEY not found in environment variables.");
         }
 
         string url = "";
@@ -59,7 +60,7 @@ class Program
 
                 foreach (var header in headerList)
                 {
-                    var prediction = await ClassifyHeaderUsingOpenAIAsync(openAIClient, header);
+                    var prediction = await OpenAIClassifier.ClassifyHeaderUsingOpenAIAsync(openAIClient, header);
                     headersWithPredictions.Add(new { header, prediction });
                 }
 
@@ -86,26 +87,6 @@ class Program
         catch (Exception ex)
         {
             Console.WriteLine($"General Error: {ex.Message}");
-        }
-    }
-
-    // Calls OpenAI API to classify the text
-    static async Task<string> ClassifyHeaderUsingOpenAIAsync(ChatClient openAIClient, string headerText)
-    {
-        try
-        {
-            ChatCompletion chatCompletion = await openAIClient.CompleteChatAsync(
-                new UserChatMessage($"Classify the following header text into one of the following categories: Technology, Sports, Politics, General. \nHeader: {headerText}")
-            );
-
-            // May take awhile so we print on console so we know it's not dead
-            Console.WriteLine(chatCompletion.Content[0].Text ?? "Unknown");
-            return chatCompletion.Content[0].Text ?? "Unknown";
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error classifying header: {ex.Message}");
-            return "Unknown";
         }
     }
 }
