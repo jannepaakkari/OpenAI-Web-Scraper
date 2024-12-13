@@ -48,5 +48,7 @@ testresults/
 .env
 .env.local
 
-#Program generated files
-categorized_headers.json
+# Ignore SQLite database files
+*.db
+*.db-shm
+*.db-wal
