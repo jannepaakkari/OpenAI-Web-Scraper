@@ -70,7 +70,7 @@ class Program
                     });
                 }
 
-                await SaveHeadersToDatabase(headersWithPredictions);
+                await SaveHeadersToDatabase(headersWithPredictions, url);
             }
             else
             {
@@ -88,7 +88,7 @@ class Program
     }
 
     // Save headers and predictions to SQLite database
-    private static async Task SaveHeadersToDatabase(List<HeaderPredictionData> headersWithPredictions)
+    private static async Task SaveHeadersToDatabase(List<HeaderPredictionData> headersWithPredictions, string url)
     {
         using var dbContext = new AppDbContext();
 
@@ -100,7 +100,8 @@ class Program
                 var headerPrediction = new HeaderPrediction
                 {
                     Header = item.Header,
-                    Prediction = item.Prediction
+                    Prediction = item.Prediction,
+                    Source = url
                 };
 
                 // Add the new entry to the context
