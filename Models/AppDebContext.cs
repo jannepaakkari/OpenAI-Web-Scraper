@@ -1,10 +1,15 @@
 using Microsoft.EntityFrameworkCore;
+
 public class AppDbContext : DbContext
 {
-    public DbSet<HeaderPrediction>? HeaderPredictions { get; set; }
+    public DbSet<HeaderPrediction> HeaderPredictions { get; set; } = null!;
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
-        optionsBuilder.UseSqlite("Data Source=HeadersDatabase.db");
+    }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
     }
 }

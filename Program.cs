@@ -1,30 +1,72 @@
-﻿using System.Text;
-using HtmlAgilityPack;
-using OpenAI.Chat;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.EntityFrameworkCore;
 using DotNetEnv;
+using OpenAI.Chat;
+using System.Text;
+using HtmlAgilityPack;
 using Webscaper.OpenAI;
+using System.Threading.Tasks;
+using System;
+using System.Net.Http;
+using System.Collections.Generic;
 
 class Program
 {
     static async Task Main(string[] args)
     {
+        // Load environment variables from .env file
         Env.Load();
-        string apiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY") ?? string.Empty;
 
-        if (string.IsNullOrEmpty(apiKey))
+        // Start the web server (ASP.NET Core)
+        var host = CreateHostBuilder(args).Build();
+
+        // Start scraping in the background
+        var apiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY") ?? string.Empty;
+        if (!string.IsNullOrEmpty(apiKey))
+        {
+            string url = "";
+            // Run the scraper in the background
+            await RunScraperAsync(apiKey, url);
+        }
+        else
         {
             Console.WriteLine("OPENAI_API_KEY not found in environment variables.");
-            return;
         }
 
-        string url = "";
+        // Run the web API
+        await host.RunAsync();
+    }
 
-        if (url.Length == 0)
-        {
-            Console.WriteLine("Please provide a URL to scrape.");
-            return;
-        }
+    // Configure and build the web API
+    public static IHostBuilder CreateHostBuilder(string[] args) =>
+        Host.CreateDefaultBuilder(args)
+            .ConfigureWebHostDefaults(webBuilder =>
+            {
+                webBuilder.ConfigureServices(services =>
+                {
+                    // DbContext configuration
+                    services.AddDbContext<AppDbContext>(options =>
+                        options.UseSqlite("Data Source=HeadersDatabase.db"));
 
+                    // Add API controllers
+                    services.AddControllers();
+                })
+                .Configure(app =>
+                {
+                    app.UseRouting();
+                    app.UseEndpoints(endpoints =>
+                    {
+                        endpoints.MapControllers();
+                    });
+                });
+            });
+
+    private static async Task RunScraperAsync(string apiKey, string url)
+    {
         using HttpClient client = new HttpClient(new HttpClientHandler
         {
             SslProtocols = System.Security.Authentication.SslProtocols.Tls12
@@ -70,7 +112,13 @@ class Program
                     });
                 }
 
-                await SaveHeadersToDatabase(headersWithPredictions, url);
+                // Manually configure DbContext options and pass to AppDbContext
+                var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
+                optionsBuilder.UseSqlite("Data Source=HeadersDatabase.db");
+
+                var dbContext = new AppDbContext(optionsBuilder.Options);
+
+                await SaveHeadersToDatabase(dbContext, headersWithPredictions, url);
             }
             else
             {
@@ -87,14 +135,10 @@ class Program
         }
     }
 
-    // Save headers and predictions to SQLite database
-    private static async Task SaveHeadersToDatabase(List<HeaderPredictionData> headersWithPredictions, string url)
+    private static async Task SaveHeadersToDatabase(AppDbContext dbContext, List<HeaderPredictionData> headersWithPredictions, string url)
     {
-        using var dbContext = new AppDbContext();
-
         foreach (var item in headersWithPredictions)
         {
-            // Check if both Header and Prediction are not null or empty
             if (!string.IsNullOrEmpty(item.Header) && !string.IsNullOrEmpty(item.Prediction))
             {
                 var headerPrediction = new HeaderPrediction
@@ -104,7 +148,6 @@ class Program
                     Source = url
                 };
 
-                // Add the new entry to the context
                 dbContext.HeaderPredictions?.Add(headerPrediction);
             }
             else
@@ -113,9 +156,14 @@ class Program
             }
         }
 
-        // Save changes to SQLite database
-        await dbContext.SaveChangesAsync();
-
-        Console.WriteLine("Headers categorized and saved to SQLite database.");
+        try
+        {
+            await dbContext.SaveChangesAsync();
+            Console.WriteLine("Headers categorized and saved to SQLite database.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to save changes to the database: {ex}");
+        }
     }
 }
