@@ -1,5 +1,5 @@
 
-### Webs scraper Implementation with OpenAI
+### Web scraper Implementation with OpenAI
 
 This Web scraper application is designed to scrape selected websites and collect topics. It uses AI to analyze and predict the categorization of the collected topics. The analysis and scraped data are stored in an SQLite database. Additionally, the application provides an API that can be used to extract data for frontend applications and other purposes. This app is primarily designed to run locally and operates via the command line.
 
@@ -53,7 +53,7 @@ dotnet ef database update
 ## Usage
 
 1. After you have run application (dotnet run) successfully you can view content from HeadersDatabase.db (should be created automatically).
-2. You can also use API: /api/content to view the content.
+2. You can also use API: /api/content to view the content. Make sure RunAPI is set true at appsettings.json.
 
 ## Screenshots
 ![Small example of scraped content](screenshots/webscraper0.png)
