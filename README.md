@@ -52,3 +52,6 @@ dotnet run
 ```bash
 dotnet ef database update
 ```
+
+## Screenshots
+![Small example of scraped content](screenshots/webscraper0.png)
