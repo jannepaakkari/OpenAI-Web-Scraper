@@ -2,19 +2,15 @@
 ### Webs scraper Implementation with OpenAI
 
 This Web scraper application is designed to scrape selected websites and collect topics. It uses AI to analyze and predict the categorization of the collected topics. The analysis and scraped data are stored in an SQLite database. Additionally, the application provides an API that can be used to extract data for frontend applications and other purposes. This app is primarily designed to run locally and operates via the command line.
+Potential use cases include detecting ongoing discussions and identifying emerging trends. With minimal to no refactoring, you can also filter results to track specific topics or keywords, such as 'X' or 'Y', to see if they are being mentioned.
 
 ## Technologies
-- C# (.NET)
-- Github Actions
+- C# (.NET 9.0)
+- Web scraping (HTML Agility Pack)
 - SQLite database
 - OpenAI
 - APIs
-- Web scraping (HTML Agility Pack)
-
-## Prerequisites
-
-- .NET 9.0 SDK
-- SQLite
+- Github Actions
 
 ## Installation
 
@@ -30,7 +26,7 @@ This Web scraper application is designed to scrape selected websites and collect
 ```bash
     "Url": Set url you want to scrape,
     "RunAPI": Set true you want to run APIs, not neccessary for scraper itself,
-    "ScrapingNodes": Nodes you want to scape, depends on site what you should add here, by default we scape headers,
+    "ScrapingNodes": Nodes you want to scrape, depends on site what you should add here, by default we scrape headers,
 ```
 
 3. Restore dependencies:
