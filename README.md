@@ -1,7 +1,7 @@
 
-### WebScraper Implementation with OpenAI
+### Webs scraper Implementation with OpenAI
 
-This WebScraper application is designed to scrape selected websites and collect topics. It uses AI to analyze and predict the categorization of the collected topics. The analysis and scraped data are stored in an SQLite database. Additionally, the application provides an API that can be used to extract data for frontend applications and other purposes. This app is primarily designed to run locally and operates via the command line.
+This Web scraper application is designed to scrape selected websites and collect topics. It uses AI to analyze and predict the categorization of the collected topics. The analysis and scraped data are stored in an SQLite database. Additionally, the application provides an API that can be used to extract data for frontend applications and other purposes. This app is primarily designed to run locally and operates via the command line.
 
 ## Technologies
 - C# (.NET)
@@ -9,7 +9,7 @@ This WebScraper application is designed to scrape selected websites and collect 
 - SQLite database
 - OpenAI
 - APIs
-- Web Scraping
+- Web scraping (HTML Agility Pack)
 
 ## Prerequisites
 
@@ -21,7 +21,7 @@ This WebScraper application is designed to scrape selected websites and collect 
 1. Clone the repository:
 ```bash
    git clone https://github.com/jannepaakkari/Web-scraper.git
-   cd WebScraper
+   cd OpenAI-WebScraper
 ```
 
 2. Set up settings
