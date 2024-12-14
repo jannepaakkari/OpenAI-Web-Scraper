@@ -9,11 +9,11 @@ using OpenAI.Chat;
 using System.Text;
 using HtmlAgilityPack;
 using Webscaper.OpenAI;
-using System.Threading.Tasks;
-using System;
-using System.Net.Http;
-using System.Collections.Generic;
 
+/*
+- Make .env file at root and add your OPENAI_API_KEY
+- Configure appsettings.json to set up if you want to run server and set URL to scrape
+*/
 class Program
 {
     static async Task Main(string[] args)
@@ -24,13 +24,28 @@ class Program
         // Start the web server (ASP.NET Core)
         var host = CreateHostBuilder(args).Build();
 
-        // Start scraping in the background
+        var config = host.Services.GetRequiredService<IConfiguration>();
+
+        // Set this at .env file (make file at root). You need your own OPENAI_API_KEY.
         var apiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY") ?? string.Empty;
+
+        bool runAPI = bool.TryParse(config["ScraperSettings:RunAPI"], out bool result) && result;
+
         if (!string.IsNullOrEmpty(apiKey))
         {
-            string url = "";
+            string url = config["ScraperSettings:Url"] ?? string.Empty;
+            // This depends on site you are scrabing.
+            string scrabingNodes = config["ScraperSettings:ScrapingNodes"] ?? "//h1|//h2|//h3|//h4|//h5|//h6";
+
             // Run the scraper in the background
-            await RunScraperAsync(apiKey, url);
+            if (url != string.Empty)
+            {
+                await RunScraperAsync(apiKey, url, scrabingNodes);
+            }
+            else
+            {
+                Console.WriteLine("URL not found in appsettings.json.");
+            }
         }
         else
         {
@@ -38,7 +53,10 @@ class Program
         }
 
         // Run the web API
-        await host.RunAsync();
+        if (runAPI)
+        {
+            await host.RunAsync();
+        }
     }
 
     // Configure and build the web API
@@ -65,7 +83,7 @@ class Program
                 });
             });
 
-    private static async Task RunScraperAsync(string apiKey, string url)
+    private static async Task RunScraperAsync(string apiKey, string url, string scrabingNodes)
     {
         using HttpClient client = new HttpClient(new HttpClientHandler
         {
@@ -87,7 +105,7 @@ class Program
             HtmlDocument doc = new HtmlDocument();
             doc.LoadHtml(html);
 
-            var headers = doc.DocumentNode.SelectNodes("//h1|//h2|//h3|//h4|//h5|//h6");
+            var headers = doc.DocumentNode.SelectNodes(scrabingNodes);
 
             if (headers != null)
             {
