@@ -1,12 +1,12 @@
 
-### WebScraper Implementation with AI
+### WebScraper Implementation with OpenAI
 
 This WebScraper application is designed to scrape selected websites and collect topics. It uses AI to analyze and predict the categorization of the collected topics. The analysis and scraped data are stored in an SQLite database. Additionally, the application provides an API that can be used to extract data for frontend applications and other purposes. This app is primarily designed to run locally and operates via the command line.
 
 ## Technologies
 - C# (.NET)
 - Github Actions
-- SQLite
+- SQLite database
 - OpenAI
 - APIs
 - Web Scraping
@@ -28,9 +28,9 @@ This WebScraper application is designed to scrape selected websites and collect 
 - Set up .env file and add OPENAI_API_KEY='your_key'
 - Modify appsettings.json:
 ```bash
-    "Url": Set url you want to scape,
+    "Url": Set url you want to scrape,
     "RunAPI": Set true you want to run APIs, not neccessary for scraper itself,
-    "ScrapingNodes": Nodes you want to scape, depends on site,
+    "ScrapingNodes": Nodes you want to scape, depends on site what you should add here, by default we scape headers,
 ```
 
 3. Restore dependencies:

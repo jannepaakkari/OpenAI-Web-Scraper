@@ -4,11 +4,5 @@ public class HeaderPrediction
     public required string Header { get; set; }
     public required string Prediction { get; set; }
     public required string Source { get; set; }
-    public DateTime Date { get; set; }
-
-    public HeaderPrediction()
-    {
-        var finlandTimeZone = TimeZoneInfo.FindSystemTimeZoneById("E. Europe Standard Time");
-        Date = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, finlandTimeZone);
-    }
+    public DateTime Date { get; set; } = DateTime.Now;
 }
