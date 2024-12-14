@@ -53,5 +53,10 @@ dotnet run
 dotnet ef database update
 ```
 
+## Usage
+
+1. After you have run application (dotnet run) successfully you can view content from HeadersDatabase.db (should be created automatically).
+2. You can also use API: /api/content to view the content.
+
 ## Screenshots
 ![Small example of scraped content](screenshots/webscraper0.png)
