@@ -9,10 +9,11 @@ using OpenAI.Chat;
 using System.Text;
 using HtmlAgilityPack;
 using Webscaper.OpenAI;
+using WebScraper.Models;
 
 /*
-- Make .env file at root and add your OPENAI_API_KEY
-- Configure appsettings.json to set up if you want to run server and set URL to scrape
+- Make .env file at root of /WebScraper and add your OPENAI_API_KEY="key"
+- Configure /WebScraper/appsettings.json to set up which nodes you want to scrape, url and if you want to run apis (running apis is not neccessary)
 */
 class Program
 {

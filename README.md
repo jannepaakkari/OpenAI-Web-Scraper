@@ -12,18 +12,18 @@ Potential use cases include detecting ongoing discussions and identifying emergi
 - OpenAI
 - APIs
 - Github Actions
+- Unit tests
 
 ## Installation
 
 1. Clone the repository:
 ```bash
    git clone https://github.com/jannepaakkari/Web-scraper.git
-   cd OpenAI-WebScraper
+   cd app/WebScraper
 ```
 
-2. Set up settings
-- Set up .env file and add OPENAI_API_KEY='your_key'
-- Modify appsettings.json:
+- Set up .env file at the root of the WebScraper folder and add `OPENAI_API_KEY='your_key'`
+- Modify `appsettings.json` at the root of the WebScraper folder:
 ```bash
     "Url": Set url you want to scrape,
     "RunAPI": Set true you want to run APIs, not neccessary for scraper itself,
@@ -52,8 +52,12 @@ dotnet ef database update
 
 ## Usage
 
-1. After you have run application (dotnet run) successfully you can view content from HeadersDatabase.db (should be created automatically).
-2. You can also use API: /api/content to view the content. Make sure RunAPI is set true at appsettings.json.
+1. After you have successfully run the application (`dotnet run` in the `cd app/WebScraper` directory), you can view the content from `HeadersDatabase.db`.
+2. You can also use the API endpoint `/api/content` to view the content. Make sure `RunAPI` is set to `true` in `appsettings.json` before running the app.
+3. You can run tests at the root using:
+```bash
+dotnet test App.sln
+```
 
 ## Screenshots
 ![Small example of scraped content](screenshots/webscraper0.png)

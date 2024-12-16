@@ -6,7 +6,7 @@ on:
       - main
   pull_request:
     branches:
-      - main 
+      - main
 
 jobs:
   build:
@@ -22,10 +22,10 @@ jobs:
           dotnet-version: '9.0' 
 
       - name: Restore dependencies
-        run: dotnet restore
+        run: dotnet restore App.sln
 
       - name: Build the project
-        run: dotnet build --configuration Release
+        run: dotnet build App.sln --configuration Release
 
       - name: Run tests
-        run: dotnet test --configuration Release
+        run: dotnet test App.sln --configuration Release
