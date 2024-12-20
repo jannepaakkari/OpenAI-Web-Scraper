@@ -67,16 +67,41 @@ class Program
             {
                 webBuilder.ConfigureServices(services =>
                 {
-                    // DbContext configuration
+                    // Read allowed origins directly from environment variables (.env file).
+                    var allowedCorsOrigins = Environment.GetEnvironmentVariable("AllowedCorsOrigin") ?? string.Empty;
+
+                    // Configure DbContext
                     services.AddDbContext<AppDbContext>(options =>
                         options.UseSqlite("Data Source=HeadersDatabase.db"));
 
                     // Add API controllers
                     services.AddControllers();
+
+                    // Add CORS configuration
+                    if (!string.IsNullOrEmpty(allowedCorsOrigins))
+                    {
+                        services.AddCors(options =>
+                        {
+                            options.AddPolicy("DynamicCorsPolicy", builder =>
+                            {
+                                builder.WithOrigins(allowedCorsOrigins.Split(','))  // Split for multiple origins
+                                       .AllowAnyHeader()
+                                       .AllowAnyMethod();
+                            });
+                        });
+                    }
                 })
                 .Configure(app =>
                 {
                     app.UseRouting();
+
+                    // Use CORS policy if configured
+                    var allowedCorsOrigins = app.ApplicationServices.GetRequiredService<IConfiguration>()["AllowedCorsOrigin"] ?? string.Empty;
+                    if (!string.IsNullOrEmpty(allowedCorsOrigins))
+                    {
+                        app.UseCors("DynamicCorsPolicy");
+                    }
+
                     app.UseEndpoints(endpoints =>
                     {
                         endpoints.MapControllers();
