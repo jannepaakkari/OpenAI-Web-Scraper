@@ -22,13 +22,10 @@ Potential use cases include detecting ongoing discussions and identifying emergi
    cd app/WebScraper
 ```
 
-- Set up .env file at the root of the WebScraper folder and add:
+Set up .env file at the root of the WebScraper folder and add:
 ```bash
     OPENAI_API_KEY='your_key'
-```
-If you need CORS (i.e. for front-end integration with the API), add the following to the .env file:
-```bash
-    AllowedCorsOrigin="your_allowed_cors"
+    AllowedCorsOrigin="your_allowed_cors" # optional add if needed with API
 ```
 
 - Modify `appsettings.json` at the root of the WebScraper folder:
